@@ -118,21 +118,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="container auth-container">
             <div class="auth-card">
                 <div class="auth-header">
-                    <h2>📝 Student Registration</h2>
+                    <h2>Student Registration</h2>
                     <p>Join our community! Register with your student ID and birthdate.</p>
                 </div>
 
                 <?php if (!empty($errors['general'])): ?>
                     <div class="auth-alert error" role="alert" aria-live="assertive">
-                        <strong>⚠️ Error:</strong> <?= h($errors['general']) ?>
+                        <i class="fas fa-exclamation-triangle"></i> <strong>Error:</strong> <?= h($errors['general']) ?>
                     </div>
                 <?php endif; ?>
 
                 <?php if ($success): ?>
                     <div class="auth-alert success" role="status" aria-live="polite">
-                        <strong>✅ Registration successful!</strong> 
+                        <i class="fas fa-check-circle"></i> <strong>Registration successful!</strong> 
                         <p style="margin-top: 8px;">Your password has been created based on your birthdate. Please save it securely.</p>
-                        <a href="../Login/login.php" class="btn-success" style="display: inline-block; margin-top: 10px;">Proceed to Login →</a>
+                        <a href="../Login/login.php" class="btn-success" style="display: inline-block; margin-top: 10px;"><i class="fas fa-sign-in-alt"></i> Proceed to Login →</a>
                     </div>
                 <?php endif; ?>
 
@@ -152,7 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                autocomplete="off">
                         <?php if (isset($errors['student_id'])): ?>
                             <div class="error-message" id="student_id-error" role="alert" aria-live="assertive">
-                                ❌ <?= h($errors['student_id']) ?>
+                                <i class="fas fa-times-circle"></i> <?= h($errors['student_id']) ?>
                             </div>
                         <?php endif; ?>
                     </div>
@@ -173,8 +173,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                    autocomplete="given-name">
                             <?php if (isset($errors['first_name'])): ?>
                                 <div class="error-message" id="first_name-error" role="alert" aria-live="assertive">
-                                    ❌ <?= h($errors['first_name']) ?>
-                                </div>
+                                    <i class="fas fa-times-circle"></i> <?= h($errors['first_name']) ?>
+                            </div>
                             <?php endif; ?>
                         </div>
 
@@ -193,7 +193,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                    autocomplete="family-name">
                             <?php if (isset($errors['last_name'])): ?>
                                 <div class="error-message" id="last_name-error" role="alert" aria-live="assertive">
-                                    ❌ <?= h($errors['last_name']) ?>
+                                    <i class="fas fa-times-circle"></i> <?= h($errors['last_name']) ?>
                                 </div>
                             <?php endif; ?>
                         </div>
@@ -215,7 +215,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <small id="email-format" class="hint">We'll never share your email with anyone else.</small>
                         <?php if (isset($errors['email'])): ?>
                             <div class="error-message" id="email-error" role="alert" aria-live="assertive">
-                                ❌ <?= h($errors['email']) ?>
+                                <i class="fas fa-times-circle"></i> <?= h($errors['email']) ?>
                             </div>
                         <?php endif; ?>
                     </div>
@@ -237,7 +237,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         
                         <div class="password-info" id="password-info">
                             <div class="info-box">
-                                <strong>🔐 Your password will be:</strong>
+                                <strong><i class="fas fa-lock"></i> Your password will be:</strong>
                                 <div id="passwordPreview" class="password-preview" aria-live="polite" aria-atomic="true">
                                     <span id="previewText">Select your birthdate</span>
                                 </div>
@@ -247,7 +247,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         
                         <?php if (isset($errors['birthdate'])): ?>
                             <div class="error-message" id="birthdate-error" role="alert" aria-live="assertive">
-                                ❌ <?= h($errors['birthdate']) ?>
+                                <i class="fas fa-times-circle"></i> <?= h($errors['birthdate']) ?>
                             </div>
                         <?php endif; ?>
                     </div>
@@ -266,15 +266,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <small id="phone-format" class="hint">Include country code for international numbers</small>
                         <?php if (isset($errors['phone'])): ?>
                             <div class="error-message" id="phone-error" role="alert" aria-live="assertive">
-                                ❌ <?= h($errors['phone']) ?>
+                                <i class="fas fa-times-circle"></i> <?= h($errors['phone']) ?>
                             </div>
                         <?php endif; ?>
                     </div>
 
                     <div class="form-actions">
                         <button type="submit" class="auth-btn">
-                            <span class="btn-text">Complete Registration</span>
-                            <span class="btn-loader" style="display: none;">⏳</span>
+                            <i class="fas fa-user-plus"></i> <span class="btn-text">Complete Registration</span>
+                            <span class="btn-loader" style="display: none;"><i class="fas fa-spinner fa-spin"></i></span>
                         </button>
                         
                         <div class="form-footer">
