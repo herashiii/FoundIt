@@ -102,19 +102,23 @@
 }
 
 .stat-breakdown {
-    margin-top: 12px;
-    display: flex;
-    flex-wrap: wrap;
+    margin-top: 15px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Creates a clean 2-column grid */
     gap: 8px;
+    width: 100%;
 }
 
 .stat-mini {
     font-size: 0.8rem;
-    padding: 4px 10px;
+    padding: 6px 8px;
     background: var(--neut-gray-1, #F7FAFC);
-    border-radius: 20px;
+    border-radius: 8px; /* Changed from pill to rounded-rectangle for better grid alignment */
     color: var(--split-char-2, #4A5568);
     border: 1px solid var(--neut-gray-3, #E2E8F0);
+    text-align: center; /* Centers the text inside each grid cell */
+    font-weight: 500;
+    white-space: nowrap; /* Prevents awkward text wrapping */
 }
 
 /* Dashboard Sections */
@@ -494,13 +498,18 @@
 
 /* Select Dropdown */
 .admin-table select {
-    padding: 6px 10px;
+    width: auto;             /* Overrides global 100% width */
+    min-width: 130px;        /* Ensures the dropdown is wide enough for the text */
+    min-height: 34px;        /* Overrides global 48px touch-target height */
+    padding: 4px 30px 4px 10px; /* Keeps space on the right for the dropdown arrow */
     border: 1px solid var(--neut-gray-3, #E2E8F0);
     border-radius: 6px;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     color: var(--split-char-1, #1A202C);
-    background: white;
+    background-color: white;
     cursor: pointer;
+    margin-bottom: 0;        /* Overrides global margin */
+    display: inline-block;
 }
 
 .admin-table select:hover {

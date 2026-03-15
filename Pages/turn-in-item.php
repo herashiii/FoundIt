@@ -635,27 +635,6 @@ removeBtn.style.zIndex = '2';
     isDragover = false;
   });
 
-  dropZone.addEventListener('drop', function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    dropZone.classList.remove('dragover');
-    isDragover = false;
-    
-    const dt = e.dataTransfer;
-    const files = Array.from(dt.files);
-    
-    // Clear existing files (replace, don't add)
-    selectedFiles = [];
-    
-    files.forEach(file => {
-      if (selectedFiles.length < 5 && file.type.startsWith('image/')) {
-        selectedFiles.push(file);
-      }
-    });
-    
-    updatePreviews();
-  });
-
 function showError(stepErrorId, message, element = null) {
   const errorBox = document.getElementById(stepErrorId);
   errorBox.textContent = message;

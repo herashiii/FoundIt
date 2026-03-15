@@ -458,7 +458,7 @@ include __DIR__ . '/../includes/header.php';
                                 <td class="action-buttons">
                                     <form method="POST" style="display: inline;">
                                         <input type="hidden" name="item_id" value="<?= $item['id'] ?>">
-                                        <select name="new_status" onchange="this.form.submit()" style="padding: 4px; font-size: 12px;">
+                                        <select name="new_status" onchange="this.form.submit()">
                                             <option value="">Change Status</option>
                                             <option value="unclaimed">Unclaimed</option>
                                             <option value="pending">Pending</option>
