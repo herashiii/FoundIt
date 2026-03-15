@@ -611,9 +611,11 @@
 
 .meta-item {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; /* Pushes label to left, value to right */
   align-items: center;
   width: 100%;
+  overflow: hidden; /* Crucial: stops the container from stretching */
+  gap: 82px; /* Ensures the text never touches the label */
 }
 
 .meta-label {
@@ -622,6 +624,7 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--text-muted);
+  flex-shrink: 0; /* Crucial: Prevents the "FOUND AT" label from shrinking */
 }
 
 .meta-value {
@@ -629,7 +632,13 @@
   color: var(--text-body);
   font-weight: 700;
   text-align: right;
-}
+  
+  /* The Truncation Magic */
+  white-space: nowrap; /* Forces text to stay on one single line */
+  overflow: hidden; /* Hides any text that overflows the container */
+  text-overflow: ellipsis; /* Adds the "..." at the end */
+  min-width: 0; /* Flexbox trick to allow the item to shrink below its content size */
+}   
 
 /* Badges */
 .status-badge {
@@ -737,6 +746,10 @@
 
   .action-card::after {
     height: 72px;
+  }
+
+  .meta-item {
+    gap: 82px;
   }
 }
 

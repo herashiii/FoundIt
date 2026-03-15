@@ -184,7 +184,7 @@ $recentItems = $stmt->fetchAll();
                             <div class="mini-card-meta-grid" role="list" aria-label="Item Details">
                                 <div class="meta-item" role="listitem">
                                     <span class="meta-label">Found at</span>
-                                    <span class="meta-value"><?= $locDisplay ?></span>
+                                    <span class="meta-value" title="<?= $locDisplay ?>"><?= $locDisplay ?></span>
                                 </div>
                                 <div class="meta-item" role="listitem">
                                     <span class="meta-label">Date found</span>
