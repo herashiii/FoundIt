@@ -769,7 +769,7 @@ $current_page = basename($_SERVER['PHP_SELF'], ".php");
         });
     </script>
 
-        //Accessibility Panel Toggle Script
+        <!--Accessibility Panel Toggle Script -->
         <script>
             function toggleAccessibilityPanel() {
                 const panel = document.getElementById('accessibilityToolbar');
