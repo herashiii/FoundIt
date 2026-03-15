@@ -1,9 +1,9 @@
 .voice-btn {
     position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 60px;
-    height: 60px;
+    top: 165px;  /* Positioned below accessibility panel (100px + 55px + 10px gap) */
+    right: 10px;
+    width: 55px;
+    height: 55px;
     border-radius: 50%;
     background: #9B2C2C;
     color: white;
@@ -14,7 +14,7 @@
     align-items: center;
     justify-content: center;
     font-size: 24px;
-    z-index: 9999;
+    z-index: 9998;
     transition: all 0.3s ease;
 }
 
@@ -235,7 +235,8 @@
 /* Mobile Responsive */
 @media (max-width: 768px) {
     .voice-btn {
-        bottom: 20px;
+        top: auto;  /* Reset top on mobile */
+        bottom: 170px;  /* Keep your mobile positioning */
         right: 20px;
         width: 50px;
         height: 50px;
