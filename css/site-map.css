@@ -1,8 +1,20 @@
-.site-map-bg{
-background:
-    linear-gradient(135deg, rgba(155, 44, 44, 0.85) 0%, rgba(96, 21, 21, 0.9) 100%),
-    url('../silliman-hall.jpg');
-padding:60px 0;
+.site-map-bg {
+    background:
+        linear-gradient(135deg, rgba(155, 44, 44, 0.85) 0%, rgba(96, 21, 21, 0.9) 100%),
+        url('../silliman-hall.jpg');
+    background-size: cover;          /* Ensures the background image covers the whole area */
+    background-position: center;       /* Keeps the image centered */
+    background-repeat: no-repeat;
+    
+    padding: 60px 0;
+    
+    /* Forces the section to take up most of the viewport height */
+    /* You may need to tweak the '300px' to match the exact combined height of your header + footer */
+    min-height: calc(100vh - 300px); 
+    
+    /* Optional: Centers the container vertically if the screen is extremely tall */
+    display: flex;
+    align-items: center; 
 }
 
 /* MAIN CONTAINER */
