@@ -769,35 +769,56 @@ $current_page = basename($_SERVER['PHP_SELF'], ".php");
         });
     </script>
 
-    <!-- NEW: Accessibility Panel Toggle Script -->
-    <script>
-        function toggleAccessibilityPanel() {
-            const panel = document.getElementById('accessibilityToolbar');
-            panel.classList.toggle('show');
-        }
-
-        // Close panel when clicking outside
-        document.addEventListener('click', function(event) {
-            const panel = document.getElementById('accessibilityToolbar');
-            const toggle = document.querySelector('.accessibility-toggle');
-            
-            if (panel && toggle && panel.classList.contains('show')) {
-                if (!panel.contains(event.target) && !toggle.contains(event.target)) {
-                    panel.classList.remove('show');
-                }
-            }
-        });
-
-        // Close with Escape key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
+        //Accessibility Panel Toggle Script
+        <script>
+            function toggleAccessibilityPanel() {
                 const panel = document.getElementById('accessibilityToolbar');
-                if (panel && panel.classList.contains('show')) {
-                    panel.classList.remove('show');
+                const voiceBtn = document.getElementById('voiceBtn');
+                
+                panel.classList.toggle('show');
+                
+                // Hide/show voice button based on panel state
+                if (panel.classList.contains('show')) {
+                    voiceBtn.style.opacity = '0';
+                    voiceBtn.style.pointerEvents = 'none';
+                    voiceBtn.style.transition = 'opacity 0.3s ease';
+                } else {
+                    voiceBtn.style.opacity = '1';
+                    voiceBtn.style.pointerEvents = 'auto';
                 }
             }
-        });
-    </script>
+
+            // Close panel when clicking outside
+            document.addEventListener('click', function(event) {
+                const panel = document.getElementById('accessibilityToolbar');
+                const toggle = document.querySelector('.accessibility-toggle');
+                const voiceBtn = document.getElementById('voiceBtn');
+                
+                if (panel && toggle && panel.classList.contains('show')) {
+                    if (!panel.contains(event.target) && !toggle.contains(event.target)) {
+                        panel.classList.remove('show');
+                        // Show voice button again when panel closes
+                        voiceBtn.style.opacity = '1';
+                        voiceBtn.style.pointerEvents = 'auto';
+                    }
+                }
+            });
+
+            // Close with Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    const panel = document.getElementById('accessibilityToolbar');
+                    const voiceBtn = document.getElementById('voiceBtn');
+                    
+                    if (panel && panel.classList.contains('show')) {
+                        panel.classList.remove('show');
+                        // Show voice button again when panel closes
+                        voiceBtn.style.opacity = '1';
+                        voiceBtn.style.pointerEvents = 'auto';
+                    }
+                }
+            });
+        </script>
 
     <!-- Logout Confirmation Script -->
     <script>

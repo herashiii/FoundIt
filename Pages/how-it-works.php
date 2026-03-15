@@ -18,13 +18,15 @@
             <p>Learn how FoundiT helps reconnect lost items with their rightful owners.</p>
         </div>
 
-        <!-- Video Player Section -->
         <div class="video-placeholder">
             <div class="video-container">
-                <video class="video-player" controls>
-                    <source src="../video/FoundiT.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
+                <iframe class="video-player" 
+                        src="https://www.youtube.com/embed/EkomG1LrdtA" 
+                        title="FoundiT - How It Works"
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                </iframe>
             </div>
         </div>
 
