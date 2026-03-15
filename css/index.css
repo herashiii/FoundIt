@@ -84,23 +84,67 @@
   text-shadow: 0 1px 2px rgba(0,0,0,0.3);
 }
 
+/* The Pill Container */
 .search-bar {
-  background: white;
-  padding: 8px;
-  border-radius: var(--radius-md);
-  display: flex;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-  width: 100%;
-  max-width: 480px;
+  background: white !important; /* Forces the white pill background */
+  padding: 6px 6px 6px 20px !important; /* 20px left padding for text, 6px padding wrapping the button */
+  border-radius: 50px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15) !important;
+  width: 100% !important;
+  max-width: 550px !important;
+  transition: box-shadow 0.2s ease, border 0.2s ease;
+  border: 2px solid transparent !important;
+  margin-top: 15px !important;
 }
 
+/* Focus Glow (Applies to the whole pill when typing) */
+.search-bar:focus-within {
+  border-color: rgba(155, 44, 44, 0.4) !important;
+  box-shadow: 0 0 0 4px rgba(155, 44, 44, 0.1), 0 8px 20px rgba(0,0,0,0.15) !important;
+}
+
+/* The Text Input (Invisible background, blends into the pill) */
 .search-input {
-  flex: 1;
-  border: none;
-  padding: 0 16px;
-  font-size: 1rem;
-  outline: none;
-  color: var(--text-main);
+  flex-grow: 1 !important;
+  width: 100% !important;
+  min-height: auto !important;
+  border: none !important;
+  background: transparent !important;
+  
+  /* THE FIX: Added 10px vertical padding so the blinking cursor looks normal, 0px horizontal */
+  padding: 10px 0 !important; 
+  margin: 0 !important;
+  
+  /* Bumped the text size up just a tiny bit to match the proportions of the pill */
+  font-size: 1.05rem !important; 
+  
+  color: var(--text-main) !important;
+  box-shadow: none !important;
+  outline: none !important;
+  text-align: left !important; 
+}
+
+/* Kills any global focus rings from base.css */
+.search-input:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* The Button (Tucked seamlessly inside the right side of the pill) */
+.search-bar .btn {
+  flex-shrink: 0 !important;
+  border-radius: 50px !important; /* Matches the pill curve */
+  padding: 0 28px !important;
+  height: 44px !important; /* Slightly smaller than the global 48px so it fits inside the padding */
+  margin: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
 .hero-pills {
@@ -636,22 +680,19 @@
   }
   
   /* Mobile Search Bar */
+  @media (max-width: 768px) {
+  /* Keep the search bar as a single pill on mobile */
   .search-bar { 
-    margin: 0 0 20px 0;
-    flex-direction: column; 
-    background: transparent; 
-    box-shadow: none; 
-    padding: 0;
-    gap: 10px;
+    margin: 0 0 20px 0 !important;
+    flex-direction: row !important; /* Prevents the button from dropping below */
+    padding: 5px 5px 5px 15px !important;
   }
-
-  .search-input { 
-    padding: 14px 16px; 
-    border-radius: var(--radius-md);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  
+  .search-bar .btn { 
+    width: auto !important; /* Stops the button from stretching */
+    padding: 0 20px !important;
   }
-
-  .search-bar .btn { width: 100%; padding: 14px; }
+}
   
   .hero-pills { justify-content: flex-start; margin-top: 20px; }
   
