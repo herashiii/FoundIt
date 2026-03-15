@@ -55,7 +55,6 @@ $current_page = basename($_SERVER['PHP_SELF'], ".php");
             .nav-actions { display: none; }
             .mobile-only-links { display: flex; flex-direction: column; gap: 12px; border-top: 1px solid var(--border); margin-top: 10px; padding-top: 15px; }
         }
-
     </style>
 </head>
 
@@ -144,44 +143,62 @@ $current_page = basename($_SERVER['PHP_SELF'], ".php");
             </label>
         </div>
 
-        <div class="accessibility-toolbar" aria-label="Accessibility options">
+                <!-- NEW: SINGLE MASTER ACCESSIBILITY CONTROL -->
+        <div class="accessibility-panel">
+            <button class="accessibility-toggle" onclick="toggleAccessibilityPanel()" aria-label="Accessibility tools">
+                <i class="fas fa-universal-access"></i>
+            </button>
+            
+            <div class="accessibility-toolbar" id="accessibilityToolbar">
+                <!-- Font Size Controls - Original buttons -->
+                <div class="tool-group">
+                    <div class="group-title">
+                        <i class="fas fa-text-height"></i> Text Size
+                    </div>
+                    <div class="tool-grid">
+                        <button class="a11y-btn" onclick="increaseFontSize()" title="Increase Font Size (Ctrl++)">
+                            <i class="fas fa-plus-circle"></i>
+                            <span class="btn-label">Bigger Text</span>
+                        </button>
+                        
+                        <button class="a11y-btn" onclick="decreaseFontSize()" title="Decrease Font Size (Ctrl+-)">
+                            <i class="fas fa-minus-circle"></i>
+                            <span class="btn-label">Smaller Text</span>
+                        </button>
+                        
+                        <button class="a11y-btn" onclick="resetFontSize()" title="Reset Font Size (Ctrl+0)">
+                            <i class="fas fa-undo-alt"></i>
+                            <span class="btn-label">Reset Text</span>
+                        </button>
+                    </div>
+                </div>
 
-        <!-- Font Size Controls -->
-        <button class="a11y-btn" onclick="increaseFontSize()" title="Increase Font Size (Ctrl++)" aria-label="Increase font size">
-            <i class="fas fa-plus-circle" aria-hidden="true"></i>
-            <span class="btn-label">Bigger Text</span>
-        </button>
-        
-        <button class="a11y-btn" onclick="decreaseFontSize()" title="Decrease Font Size (Ctrl+-)" aria-label="Decrease font size">
-            <i class="fas fa-minus-circle" aria-hidden="true"></i>
-            <span class="btn-label">Smaller Text</span>
-        </button>
-        
-        <button class="a11y-btn" onclick="resetFontSize()" title="Reset Font Size (Ctrl+0)" aria-label="Reset font size">
-            <i class="fas fa-undo-alt" aria-hidden="true"></i>
-            <span class="btn-label">Reset Text</span>
-        </button>
-        
-        <!-- Color Blind Toggle -->
-        <button class="a11y-btn" onclick="cycleColorBlindMode()" title="Color Blindness Mode" aria-label="Cycle through color blindness modes" id="colorBlindToggle">
-            <i class="fas fa-eye" aria-hidden="true"></i>
-            <span class="btn-label">Color Mode</span>
-            <span class="mode-badge" id="colorBlindIndicator" aria-hidden="true">A</span>
-        </button>
+                <!-- Visual Modes - Original buttons -->
+                <div class="tool-group">
+                    <div class="group-title">
+                        <i class="fas fa-eye"></i> Visual Modes
+                    </div>
+                    <div class="tool-grid">
+                        <button class="a11y-btn" onclick="cycleColorBlindMode()" title="Color Blindness Mode" id="colorBlindToggle">
+                            <i class="fas fa-eye"></i>
+                            <span class="btn-label">Color Mode</span>
+                            <span class="mode-badge" id="colorBlindIndicator">A</span>
+                        </button>
 
-        <!-- High Contrast Toggle -->
-        <button class="a11y-btn" onclick="toggleHighContrast()" title="High Contrast Mode - Maximum visibility" aria-label="Toggle high contrast mode" id="highContrastToggle">
-            <i class="fas fa-adjust" aria-hidden="true"></i>
-            <span class="btn-label">High Contrast</span>
-            <span class="mode-badge" id="highContrastIndicator" style="display: none;">HC</span>
-        </button>
+                        <button class="a11y-btn" onclick="toggleHighContrast()" title="High Contrast Mode" id="highContrastToggle">
+                            <i class="fas fa-adjust"></i>
+                            <span class="btn-label">High Contrast</span>
+                            <span class="mode-badge" id="highContrastIndicator" style="display: none;">HC</span>
+                        </button>
 
-        <!-- Text-to-Speech Button -->
-        <button class="a11y-btn" onclick="toggleTextToSpeech()" title="Text to Speech - Read page aloud" aria-label="Toggle Text to Speech" id="ttsButton">
-            <i class="fas fa-volume-up" aria-hidden="true"></i>
-            <span class="btn-label">Read Aloud</span>
-        </button>
-    </div>
+                        <button class="a11y-btn" onclick="toggleTextToSpeech()" title="Read page aloud" id="ttsButton">
+                            <i class="fas fa-volume-up"></i>
+                            <span class="btn-label">Read Aloud</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </nav>
 
     <!-- Font Size Control Script -->
@@ -463,9 +480,8 @@ $current_page = basename($_SERVER['PHP_SELF'], ".php");
                 ttsCurrentIndex = 0;
                 updateTTSStatus(`Ready to read ${ttsElements.length} sections. Click Play to start.`);
                 
-                // SWAP THESE TWO LINES:
-                document.getElementById('ttsPauseBtn').style.display = 'none';         // Changed from 'inline-flex'
-                document.getElementById('ttsResumeBtn').style.display = 'inline-flex'; // Changed from 'none'
+                document.getElementById('ttsPauseBtn').style.display = 'none';
+                document.getElementById('ttsResumeBtn').style.display = 'inline-flex';
                 document.getElementById('ttsProgressBar').style.width = '0%';
             } else {
                 updateTTSStatus('No readable content found');
@@ -685,14 +701,13 @@ $current_page = basename($_SERVER['PHP_SELF'], ".php");
                 if (isHidden) {
                     ttsControls.style.display = 'flex';
                     ttsControls.setAttribute('aria-hidden', 'false');
-                    prepareTTS(); // Scan the page for content
+                    prepareTTS();
                     updateTTSStatus('Ready. Click Play to start reading.');
                 } else {
                     forceStopAndHide();
                 }
             };
 
-            // Ensure the Play button (ResumeBtn) is the master trigger
             document.getElementById('ttsResumeBtn').addEventListener('click', function() {
                 if (ttsIsPaused) {
                     resumeTTS();
@@ -701,7 +716,6 @@ $current_page = basename($_SERVER['PHP_SELF'], ".php");
                 }
             });
 
-            // IMPROVEMENT: Add Keyboard 'Esc' key to stop TTS
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape' && document.getElementById('ttsControls').style.display === 'flex') {
                     forceStopAndHide();
@@ -709,7 +723,6 @@ $current_page = basename($_SERVER['PHP_SELF'], ".php");
             });
             const stopBtn = document.querySelector('.tts-btn[onclick="stopTTS()"]');
 
-            // Add these variable definitions:
             const pauseBtn = document.getElementById('ttsPauseBtn');
             const resumeBtn = document.getElementById('ttsResumeBtn');
             const closeBtn = document.querySelector('.tts-close-btn');
@@ -752,6 +765,36 @@ $current_page = basename($_SERVER['PHP_SELF'], ".php");
                     e.preventDefault();
                     changeTTSRate(this.value);
                 };
+            }
+        });
+    </script>
+
+    <!-- NEW: Accessibility Panel Toggle Script -->
+    <script>
+        function toggleAccessibilityPanel() {
+            const panel = document.getElementById('accessibilityToolbar');
+            panel.classList.toggle('show');
+        }
+
+        // Close panel when clicking outside
+        document.addEventListener('click', function(event) {
+            const panel = document.getElementById('accessibilityToolbar');
+            const toggle = document.querySelector('.accessibility-toggle');
+            
+            if (panel && toggle && panel.classList.contains('show')) {
+                if (!panel.contains(event.target) && !toggle.contains(event.target)) {
+                    panel.classList.remove('show');
+                }
+            }
+        });
+
+        // Close with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const panel = document.getElementById('accessibilityToolbar');
+                if (panel && panel.classList.contains('show')) {
+                    panel.classList.remove('show');
+                }
             }
         });
     </script>
