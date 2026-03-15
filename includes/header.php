@@ -463,8 +463,9 @@ $current_page = basename($_SERVER['PHP_SELF'], ".php");
                 ttsCurrentIndex = 0;
                 updateTTSStatus(`Ready to read ${ttsElements.length} sections. Click Play to start.`);
                 
-                document.getElementById('ttsPauseBtn').style.display = 'inline-flex';
-                document.getElementById('ttsResumeBtn').style.display = 'none';
+                // SWAP THESE TWO LINES:
+                document.getElementById('ttsPauseBtn').style.display = 'none';         // Changed from 'inline-flex'
+                document.getElementById('ttsResumeBtn').style.display = 'inline-flex'; // Changed from 'none'
                 document.getElementById('ttsProgressBar').style.width = '0%';
             } else {
                 updateTTSStatus('No readable content found');
@@ -679,27 +680,39 @@ $current_page = basename($_SERVER['PHP_SELF'], ".php");
             const originalToggle = toggleTextToSpeech;
             window.toggleTextToSpeech = function() {
                 const ttsControls = document.getElementById('ttsControls');
+                const isHidden = ttsControls.style.display === 'none' || ttsControls.style.display === '';
                 
-                if (ttsControls.style.display === 'none' || ttsControls.style.display === '') {
+                if (isHidden) {
                     ttsControls.style.display = 'flex';
-                    setTimeout(() => {
-                        prepareTTS();
-                        setTimeout(() => {
-                            if (ttsElements.length > 0) {
-                                startReading();
-                            }
-                        }, 500);
-                    }, 100);
+                    ttsControls.setAttribute('aria-hidden', 'false');
+                    prepareTTS(); // Scan the page for content
+                    updateTTSStatus('Ready. Click Play to start reading.');
                 } else {
                     forceStopAndHide();
                 }
             };
-            
-            // Add direct handlers for play/pause/stop
+
+            // Ensure the Play button (ResumeBtn) is the master trigger
+            document.getElementById('ttsResumeBtn').addEventListener('click', function() {
+                if (ttsIsPaused) {
+                    resumeTTS();
+                } else {
+                    startReading();
+                }
+            });
+
+            // IMPROVEMENT: Add Keyboard 'Esc' key to stop TTS
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && document.getElementById('ttsControls').style.display === 'flex') {
+                    forceStopAndHide();
+                }
+            });
+            const stopBtn = document.querySelector('.tts-btn[onclick="stopTTS()"]');
+
+            // Add these variable definitions:
             const pauseBtn = document.getElementById('ttsPauseBtn');
             const resumeBtn = document.getElementById('ttsResumeBtn');
             const closeBtn = document.querySelector('.tts-close-btn');
-            const stopBtn = document.querySelector('.tts-btn[onclick="stopTTS()"]');
             
             if (pauseBtn) {
                 pauseBtn.onclick = function(e) {

@@ -74,35 +74,13 @@
 }
 
 @media (max-width: 768px) {
-    .about-hero {
-        padding: 56px 0 48px;
-        min-height: auto;
-    }
-
-    .about-hero h1 {
-        font-size: 2rem !important;
-        line-height: 1.15;
-        margin-bottom: 14px !important;
-    }
-
-    .about-hero p {
-        font-size: 1rem !important;
-        max-width: 100% !important;
-        line-height: 1.6;
-        padding: 0 4px;
+    .about-section p {
+        padding: 0 20px;
     }
 }
 
 @media (max-width: 480px) {
-    .about-hero {
-        padding: 44px 0 36px;
+    .about-section p {
+        padding: 0 20px;
     }
-
-    .about-hero h1 {
-        font-size: 1.75rem !important;
-    }
-
-    .about-hero p {
-        font-size: 0.95rem !important;
-    }
-}
+} 

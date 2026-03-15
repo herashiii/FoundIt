@@ -38,15 +38,6 @@ $locations  = $pdo->query("SELECT id, name FROM locations WHERE is_active = 1 OR
 // 3. Fetch Active Offices
 $offices = $pdo->query("SELECT id, name FROM offices WHERE is_active = 1 ORDER BY name ASC")->fetchAll();
 
-// 4. Find IDs category id
-$idCategoryId = null;
-foreach ($categories as $c) {
-  if (mb_strtolower($c['name']) === 'ids' || mb_strtolower($c['name']) === 'identification cards') {
-    $idCategoryId = (int)$c['id'];
-    break;
-  }
-}
-
 $errors = [];
 $postedStep = (int)($_POST['current_step'] ?? 1);
 
@@ -133,12 +124,6 @@ if ($found_location_id === 0) $errors[] = "Please select the location where the 
 if ($found_date === '') $errors[] = "Please provide the date the item was found.";
 if ($custody_state === 'at_office' && $office_id === 0) $errors[] = "Please select the office where you left the item.";
 
-// If IDs, require extra
-if ($idCategoryId !== null && $category_id === $idCategoryId) {
-    if ($id_type === '') $errors[] = "Please select the type of ID.";
-    if ($name_on_id === '') $errors[] = "Please enter the name visible on the ID.";
-  }
-
  if (empty($errors)) {
     try {
       $pdo->beginTransaction();
@@ -212,31 +197,6 @@ if ($idCategoryId !== null && $category_id === $idCategoryId) {
       ]);
       $item_id = (int)$pdo->lastInsertId();
 
-      // ID details table (only if you created it)
-      if ($idCategoryId !== null && $category_id === $idCategoryId) {
-        $pdo->exec("
-          CREATE TABLE IF NOT EXISTS item_id_details (
-            item_id INT UNSIGNED PRIMARY KEY,
-            id_type VARCHAR(40) NOT NULL,
-            name_on_id VARCHAR(140) NOT NULL,
-            department VARCHAR(140) NULL,
-            distinct_feature VARCHAR(160) NULL,
-            CONSTRAINT fk_iddetails_item FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE
-          ) ENGINE=InnoDB
-        ");
-
-        $pdo->prepare("
-          INSERT INTO item_id_details (item_id, id_type, name_on_id, department, distinct_feature)
-          VALUES (:item_id, :id_type, :name_on_id, :department, :distinct_feature)
-        ")->execute([
-          ':item_id' => $item_id,
-          ':id_type' => $id_type,
-          ':name_on_id' => $name_on_id,
-          ':department' => $department !== '' ? $department : null,
-          ':distinct_feature' => $distinct_feature !== '' ? $distinct_feature : null
-        ]);
-      }
-
       // Upload photos
       $baseUploadDir = __DIR__ . "/uploads/items/{$item_id}";
       ensureDir($baseUploadDir);
@@ -253,6 +213,13 @@ if ($idCategoryId !== null && $category_id === $idCategoryId) {
         $tmp = $file['tmp_name'];
         $origName = $file['name'];
         
+        // NEW SECURITY CHECK: Verify true MIME type
+        $mimeType = mime_content_type($tmp);
+        $allowedMimes = ['image/jpeg', 'image/png', 'image/webp'];
+        if (!in_array($mimeType, $allowedMimes, true)) {
+            throw new RuntimeException("Invalid file type detected. Only actual JPG, PNG, or WEBP files are allowed.");
+        }
+
         $ext = strtolower(pathinfo($origName, PATHINFO_EXTENSION));
         if (!in_array($ext, $allowedExt, true)) throw new RuntimeException("Only JPG, PNG, or WEBP allowed.");
 
@@ -325,7 +292,7 @@ include __DIR__ . '/../includes/header.php';
 
     <form id="reportForm" method="post" enctype="multipart/form-data" novalidate>
       <input type="hidden" name="current_step" id="currentStepInput" value="<?= (int)$postedStep ?>">
-      <input type="hidden" name="MAX_FILE_SIZE" value="20971520"> <!-- 20MB max file size -->
+      <input type="hidden" name="MAX_FILE_SIZE" value="10485760"> <!-- 20MB max file size -->
 
       <!-- STEP 1 -->
       <section class="report-card" data-step="1">
@@ -364,25 +331,6 @@ include __DIR__ . '/../includes/header.php';
               <?= h($cat['name']) ?>
             </div>
           <?php endforeach; ?>
-        </div>
-
-        <div id="idExtra" class="id-extra" <?= ($oldCategoryId === $idCategoryId) ? '' : 'hidden' ?>>
-          <div class="id-extra-head">
-            <strong>ID Details</strong>
-            <span class="muted">Required for Identification Cards</span>
-          </div>
-          
-          <label>Type of ID <span class="req">*</span></label>
-          <input type="text" name="id_type" placeholder="e.g., Student ID, Driver's License" value="<?= h($old['id_type'] ?? '') ?>">
-          
-          <label>Name on ID <span class="req">*</span></label>
-          <input type="text" name="name_on_id" placeholder="Full name as it appears on the ID" value="<?= h($old['name_on_id'] ?? '') ?>">
-          
-          <label>Department / Course (optional)</label>
-          <input type="text" name="department" placeholder="e.g., College of Nursing" value="<?= h($old['department'] ?? '') ?>">
-          
-          <label>Distinct Feature (optional)</label>
-          <input type="text" name="distinct_feature" placeholder="e.g., with blue lanyard, cracked case" value="<?= h($old['distinct_feature'] ?? '') ?>">
         </div>
 
         <label for="title">Item Title <span class="req">*</span></label>
@@ -550,20 +498,45 @@ include __DIR__ . '/../includes/header.php';
   let isProcessing = false;
   
   photoInput.addEventListener('change', function(e) {
-    // Prevent multiple processing
     if (isProcessing) return;
     isProcessing = true;
     
     const files = Array.from(this.files);
-    console.log('Files selected:', files.length);
     
-    // Clear existing files (replace, don't add)
-    selectedFiles = [];
-    
-    // Add new files (limit to 5 total)
+    // Append instead of replacing
     files.forEach(file => {
       if (selectedFiles.length < 5 && file.type.startsWith('image/')) {
-        selectedFiles.push(file);
+        const exists = selectedFiles.some(f => f.name === file.name && f.size === file.size);
+        if (!exists) {
+            selectedFiles.push(file);
+        }
+      }
+    });
+    
+    updatePreviews();
+    step1Error.style.display = 'none';
+    dropZone.classList.remove('input-error');
+    this.value = '';
+    
+    setTimeout(() => { isProcessing = false; }, 100);
+  });
+
+  dropZone.addEventListener('drop', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    dropZone.classList.remove('dragover');
+    isDragover = false;
+    
+    const dt = e.dataTransfer;
+    const files = Array.from(dt.files);
+    
+    // Append instead of replacing
+    files.forEach(file => {
+      if (selectedFiles.length < 5 && file.type.startsWith('image/')) {
+        const exists = selectedFiles.some(f => f.name === file.name && f.size === file.size);
+        if (!exists) {
+            selectedFiles.push(file);
+        }
       }
     });
     
@@ -744,30 +717,6 @@ function clearErrors(stepErrorId) {
         );
         return;
       }
-
-      // If ID category
-      if (document.getElementById('idExtra') && !document.getElementById('idExtra').hidden) {
-        const idType = document.querySelector('[name="id_type"]');
-        const nameOnId = document.querySelector('[name="name_on_id"]');
-
-        if (!idType.value.trim()) {
-          showError(
-            'step2Error',
-            "Please enter the type of ID.",
-            idType
-          );
-          return;
-        }
-
-        if (!nameOnId.value.trim()) {
-          showError(
-            'step2Error',
-            "Please enter the name shown on the ID.",
-            nameOnId
-          );
-          return;
-        }
-      }
     }
 
     // STEP 3 VALIDATION
@@ -849,7 +798,6 @@ function clearErrors(stepErrorId) {
   document.addEventListener('DOMContentLoaded', function() {
     const categoryGrid = document.getElementById('categoryGrid');
     const categoryId = document.getElementById('categoryId');
-    const idExtra = document.getElementById('idExtra');
     
     if (categoryGrid) {
       document.querySelectorAll('.cat').forEach(cat => {
@@ -859,23 +807,17 @@ function clearErrors(stepErrorId) {
           document.querySelectorAll('.cat').forEach(c => c.classList.remove('active'));
           this.classList.add('active');
           categoryId.value = this.dataset.id;
-          
-          if (this.dataset.name.toLowerCase() === 'ids') {
-            idExtra.hidden = false;
-          } else {
-            idExtra.hidden = true;
-          }
         });
       });
 
-    // Handle Back Buttons
-    document.querySelectorAll('.prevBtn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        if (currentStep > 1) {
-          showStep(currentStep - 1);
-        }
+      // Handle Back Buttons
+      document.querySelectorAll('.prevBtn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (currentStep > 1) {
+            showStep(currentStep - 1);
+          }
+        });
       });
-    });
       
       // Restore selected category
       const savedId = categoryId.value;
@@ -883,9 +825,6 @@ function clearErrors(stepErrorId) {
         const selected = document.querySelector(`.cat[data-id="${savedId}"]`);
         if (selected) {
           selected.classList.add('active');
-          if (selected.dataset.name.toLowerCase() === 'ids') {
-            idExtra.hidden = false;
-          }
         }
       }
     }
@@ -910,34 +849,6 @@ function clearErrors(stepErrorId) {
       });
     });
   });
-
-   // Voice step navigation enhancement
-    document.addEventListener('DOMContentLoaded', function() {
-        // Announce current step when page loads
-        const currentStep = document.querySelector('.step.active');
-        if (currentStep && window.voiceCommands) {
-            setTimeout(() => {
-                window.voiceCommands.speak(`You are on step ${currentStep.dataset.step}: ${currentStep.textContent}`);
-            }, 1000);
-        }
-        
-        // Announce step changes
-        const observer = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
-                if (mutation.target.classList.contains('active')) {
-                    const stepText = mutation.target.textContent;
-                    const stepNum = mutation.target.dataset.step;
-                    if (window.voiceCommands) {
-                        window.voiceCommands.speak(`Step ${stepNum}: ${stepText}`);
-                    }
-                }
-            });
-        });
-        
-        document.querySelectorAll('.step').forEach(step => {
-            observer.observe(step, { attributes: true, attributeFilter: ['class'] });
-        });
-    });
 </script>
 
 <?php include __DIR__ . '/../includes/footer.php'; ?>   

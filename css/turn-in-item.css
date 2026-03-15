@@ -220,28 +220,6 @@
   box-shadow: 0 0 0 1px #9B2C2C;
 }
 
-/* Inputs & Textareas */
-input, select, textarea {
-  width:100%;
-  padding:12px;
-  border-radius:10px;
-  border:1px solid #d1d5db;
-  margin-bottom:14px;
-  font-family: inherit;
-  font-size: 1rem;
-}
-
-input:focus, select:focus, textarea:focus {
-  outline: none;
-  border-color: #9B2C2C;
-  box-shadow: 0 0 0 3px rgba(155, 44, 44, 0.1);
-}
-
-.input-error {
-  border-color: #e53e3e !important;
-  background-color: #fff5f5;
-}
-
 /* Radio Groups */
 .radio-group {
   display: flex;
@@ -328,6 +306,13 @@ input:focus, select:focus, textarea:focus {
 
 .form-alert ul{ 
   margin: 8px 0 0 18px; 
+}
+
+/* Ensure the 'Time' and 'Date' inputs sit well together if side-by-side */
+.form-row {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
 }
 
 /* Helpers */
@@ -498,13 +483,16 @@ input:focus, select:focus, textarea:focus {
     word-break: break-word;
   }
 
-  /* Form controls */
-  input,
+/* Form controls - Specific targeting so Radio Buttons aren't affected */
+  input[type="text"],
+  input[type="date"],
+  input[type="time"],
   select,
   textarea {
-    font-size: 16px; /* prevents iPhone zoom */
-    padding: 12px;
-    margin-bottom: 12px;
+    font-size: 16px !important; 
+    margin-bottom: 16px;
+    width: 100%;
+    display: block;
   }
 
   textarea {

@@ -185,17 +185,19 @@ class VoiceCommandSystem {
             { command: 'cancel', action: () => this.navigateBack() }
         );
     }
-    
+        
     onStart() {
         this.isListening = true;
-        this.showFeedback('Listening...', 'listening');
-        console.log('Voice recognition started');
+        const voiceBtn = document.getElementById('voiceBtn');
+        if (voiceBtn) voiceBtn.classList.add('pulse-animation'); // Visual cue only
+        this.showFeedback('Listening for command...', 'listening');
     }
-    
+
     onEnd() {
         this.isListening = false;
+        const voiceBtn = document.getElementById('voiceBtn');
+        if (voiceBtn) voiceBtn.classList.remove('pulse-animation');
         this.hideFeedback();
-        console.log('Voice recognition ended');
     }
     
     onResult(event) {
@@ -438,8 +440,14 @@ class VoiceCommandSystem {
     submitForm(formId) {
         const form = document.getElementById(formId);
         if (form) {
-            // Validate form first
-            if (form.checkValidity()) {
+            // Find the submit button and click it to trigger custom event listeners
+            const submitBtn = form.querySelector('button[type="submit"], input[type="submit"]');
+            
+            if (submitBtn) {
+                this.speak('Submitting form');
+                submitBtn.click();
+            } else if (form.checkValidity()) {
+                // Fallback if no submit button exists
                 form.submit();
                 this.speak('Submitting form');
             } else {
