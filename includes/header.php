@@ -63,7 +63,7 @@ $current_page = basename($_SERVER['PHP_SELF'], ".php");
 
     <div id="ttsControls" class="tts-controls" style="display: none;" role="region" aria-label="Text to speech controls">
         <div class="tts-header">
-            <span><i class="fas fa-volume-up" aria-hidden="true"></i> Reading Aloud</span>
+            <span><i class="fas fa-volume-up" aria-hidden="true"></i>&nbsp; Reading Aloud</span>
             <button class="tts-close-btn" aria-label="Stop and close text to speech">×</button>
         </div>
         <div class="tts-progress" aria-hidden="true">
@@ -194,6 +194,18 @@ $current_page = basename($_SERVER['PHP_SELF'], ".php");
                         <button class="a11y-btn" onclick="toggleTextToSpeech()" title="Read page aloud" id="ttsButton">
                             <i class="fas fa-volume-up"></i>
                             <span class="btn-label">Read Aloud</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="tool-group">
+                    <div class="group-title">
+                        <i class="fas fa-headset"></i> Voice Controls
+                    </div>
+                    <div class="tool-grid">
+                        <button class="a11y-btn" id="voiceBtn" title="Voice commands (Ctrl+Shift+V)" aria-label="Voice commands">
+                            <i class="fas fa-microphone" aria-hidden="true"></i>
+                            <span class="btn-label">Voice Command</span>
                         </button>
                     </div>
                 </div>
@@ -771,54 +783,34 @@ $current_page = basename($_SERVER['PHP_SELF'], ".php");
 
         <!--Accessibility Panel Toggle Script -->
         <script>
-            function toggleAccessibilityPanel() {
-                const panel = document.getElementById('accessibilityToolbar');
-                const voiceBtn = document.getElementById('voiceBtn');
-                
-                panel.classList.toggle('show');
-                
-                // Hide/show voice button based on panel state
-                if (panel.classList.contains('show')) {
-                    voiceBtn.style.opacity = '0';
-                    voiceBtn.style.pointerEvents = 'none';
-                    voiceBtn.style.transition = 'opacity 0.3s ease';
-                } else {
-                    voiceBtn.style.opacity = '1';
-                    voiceBtn.style.pointerEvents = 'auto';
+        function toggleAccessibilityPanel() {
+            const panel = document.getElementById('accessibilityToolbar');
+            panel.classList.toggle('show');
+            // Removed the old logic that was hiding the voice button
+        }
+
+        // Close panel when clicking outside
+        document.addEventListener('click', function(event) {
+            const panel = document.getElementById('accessibilityToolbar');
+            const toggle = document.querySelector('.accessibility-toggle');
+            
+            if (panel && toggle && panel.classList.contains('show')) {
+                if (!panel.contains(event.target) && !toggle.contains(event.target)) {
+                    panel.classList.remove('show');
                 }
             }
+        });
 
-            // Close panel when clicking outside
-            document.addEventListener('click', function(event) {
+        // Close with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
                 const panel = document.getElementById('accessibilityToolbar');
-                const toggle = document.querySelector('.accessibility-toggle');
-                const voiceBtn = document.getElementById('voiceBtn');
-                
-                if (panel && toggle && panel.classList.contains('show')) {
-                    if (!panel.contains(event.target) && !toggle.contains(event.target)) {
-                        panel.classList.remove('show');
-                        // Show voice button again when panel closes
-                        voiceBtn.style.opacity = '1';
-                        voiceBtn.style.pointerEvents = 'auto';
-                    }
+                if (panel && panel.classList.contains('show')) {
+                    panel.classList.remove('show');
                 }
-            });
-
-            // Close with Escape key
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape') {
-                    const panel = document.getElementById('accessibilityToolbar');
-                    const voiceBtn = document.getElementById('voiceBtn');
-                    
-                    if (panel && panel.classList.contains('show')) {
-                        panel.classList.remove('show');
-                        // Show voice button again when panel closes
-                        voiceBtn.style.opacity = '1';
-                        voiceBtn.style.pointerEvents = 'auto';
-                    }
-                }
-            });
-        </script>
+            }
+        });
+    </script>
 
     <!-- Logout Confirmation Script -->
     <script>
@@ -852,10 +844,6 @@ $current_page = basename($_SERVER['PHP_SELF'], ".php");
         });
     </script>
 
-    <!-- Voice Command System -->
-    <button id="voiceBtn" class="voice-btn" aria-label="Voice commands" title="Voice commands (Ctrl+Shift+V)">
-        <i class="fas fa-microphone"></i>
-    </button>
 
     <script src="../js/voice-commands.js"></script>
     <script>

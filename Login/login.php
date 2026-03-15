@@ -453,10 +453,6 @@ input.error:focus {
     border-width: 0;
 }
 
-.form-actions {
-    margin-top: 24px;
-}
-
 .auth-btn {
     width: 100%;
     padding: 14px;

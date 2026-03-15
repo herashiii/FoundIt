@@ -119,9 +119,9 @@ $items = $itemsStmt->fetchAll();
                 <div class="sidebar-section">
                     <h2 class="sidebar-title">Search</h2>
                     <div class="search-box">
-                        <img src="../magnifying-glass-search.png" class="search-signifier" alt="" aria-hidden="true">
-                        <input type="text" name="q" value="<?= h($searchQuery) ?>" placeholder="Type here..." title="Search by item name or description" aria-label="Search by item name or description">
-                    </div>
+    <i class="fas fa-search search-signifier" aria-hidden="true"></i>
+    <input type="text" name="q" value="<?= h($searchQuery) ?>" placeholder="Type here..." title="Search by item name or description" aria-label="Search by item name or description">
+</div>
                 </div>
 
                 <div class="sidebar-section">
@@ -175,10 +175,10 @@ $items = $itemsStmt->fetchAll();
                     <p style="color: var(--split-char-2); font-weight: 500;">No items found matching your filters.</p>
                 </div>
             <?php else: ?>
-                <div class="grid-controls" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-                    <span style="font-size: 0.9rem; color: var(--split-char-2);">Showing <strong><?= count($items) ?></strong> items</span>
+                <div class="grid-controls">
+                    <span class="item-count">Showing <strong><?= count($items) ?></strong> items</span>
 
-                    <select aria-label="Sort items by date" onchange="document.querySelector('input[name=\'sort\']').value=this.value; document.getElementById('filterForm').submit();" style="padding: 6px 12px; border-radius: 6px; border: 1px solid var(--neut-gray-3); font-family: 'Inter', sans-serif;">
+                    <select class="sort-select" aria-label="Sort items by date" onchange="document.querySelector('input[name=\'sort\']').value=this.value; document.getElementById('filterForm').submit();">
                         <option value="newest" <?= $sortParam === 'newest' ? 'selected' : '' ?>>Newest First</option>
                         <option value="oldest" <?= $sortParam === 'oldest' ? 'selected' : '' ?>>Oldest First</option>
                     </select>
@@ -235,20 +235,20 @@ $items = $itemsStmt->fetchAll();
                             <div class="card-body">
                                 <span class="category-pill"><?= h($item['category'] ?? 'General') ?></span>
                                 <h3 class="card-title"><?= h($item['title']) ?></h3>
-
-                                <div class="card-meta">
-                                    <div class="meta-row" title="Specific location where found">
-                                        <span class="meta-icon" aria-hidden="true">📍</span>
-                                        <span class="meta-label sr-only">FOUND AT:</span>
-                                        <span class="meta-value"><?= h($location) ?></span>
-                                    </div>
-
-                                    <div class="meta-row" title="The date this item was turned in">
-                                        <span class="meta-icon" aria-hidden="true">📅</span>
-                                        <span class="meta-label sr-only">DATE FOUND:</span>
-                                        <span class="meta-value"><?= h($dateFormatted) ?></span>
-                                    </div>
+                          
+                            <div class="card-meta">
+                                <div class="meta-row" title="Specific location where found">
+                                    <span class="meta-icon" aria-hidden="true">📍</span>
+                                    <span class="meta-label">FOUND AT:</span>
+                                    <span class="meta-value"><?= h($location) ?></span>
                                 </div>
+
+                                <div class="meta-row" title="The date this item was turned in">
+                                    <span class="meta-icon" aria-hidden="true">📅</span>
+                                    <span class="meta-label">DATE FOUND:</span>
+                                    <span class="meta-value"><?= h($dateFormatted) ?></span>
+                                </div>
+                            </div>
                             </div>
                         </a>
                     <?php endforeach; ?>

@@ -1,12 +1,14 @@
 .accessibility-panel {
     position: fixed;
-    top: 100px;
-    right: 10px;
+    top: auto;
+    bottom: 30px;     /* Anchors to bottom */
+    right: 30px;      /* Anchors to right */
+    left: auto;
     z-index: 9999;
     display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 10px;
+    flex-direction: column-reverse; /* Pops the menu UP */
+    align-items: flex-end; /* Aligns menu to the right edge */
+    gap: 15px;
 }
 
 .accessibility-toggle {
@@ -96,7 +98,8 @@
 
 .a11y-btn .btn-label {
     position: absolute;
-    right: 55px;
+    right: 55px; /* Pushes labels to the left of the button */
+    left: auto;
     background: #9B2C2C;
     color: white;
     padding: 6px 10px;
@@ -223,28 +226,58 @@
 }
 
 .tts-btn { 
-    background: rgba(255,255,255,0.15); 
-    border: 1px solid rgba(255,255,255,0.3); 
-    color: white; 
-    width: 44px;
-    height: 44px;
-    border-radius: 50%; 
-    cursor: pointer; 
-    display: inline-flex; 
-    align-items: center; 
-    justify-content: center; 
-    font-size: 16px; 
+    background: rgba(255,255,255,0.15) !important; 
+    border: 1px solid rgba(255,255,255,0.3) !important; 
+    color: white !important; 
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;  /* Stops it from shrinking */
+    min-height: 44px !important; /* Stops it from stretching */
+    padding: 0 !important;       /* Kills any global button padding */
+    border-radius: 50% !important; 
+    cursor: pointer !important; 
+    display: inline-flex !important; 
+    align-items: center !important; 
+    justify-content: center !important; 
+    font-size: 16px !important; 
+    flex-shrink: 0 !important;   /* Forces flexbox to keep it a perfect circle */
 }
 
 .tts-speed { 
-    background: rgba(255,255,255,0.15); 
-    border: 1px solid rgba(255,255,255,0.4); 
-    color: white; 
-    padding: 0 15px;
-    border-radius: 22px;
-    font-size: 13px; 
-    height: 44px;
-    margin-left: 10px;
+    background: rgba(255, 255, 255, 0.15) !important; 
+    border: 1px solid rgba(255, 255, 255, 0.4) !important; 
+    color: white !important; 
+    padding: 0 35px 0 15px !important; /* Extra right padding for the custom arrow */
+    border-radius: 22px !important;
+    font-size: 13px !important; 
+    height: 44px !important;
+    margin: 10px !important;
+    cursor: pointer !important;
+    font-family: 'Inter', sans-serif !important;
+    
+    /* Strips default browser styling */
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    
+    /* Adds a clean custom white arrow icon */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 12px center !important;
+    
+    display: inline-flex !important;
+    align-items: center !important;
+}
+
+/* Hover effect to match the buttons */
+.tts-speed:hover {
+    background-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+/* Optional: Fix for the dropdown options appearance */
+.tts-speed option {
+    background-color: #9B2C2C !important;
+    color: white !important;
 }
 
 .tts-status { 
@@ -270,30 +303,13 @@
 @media (max-width: 768px) {
     .accessibility-panel {
         top: auto;
-        bottom: 100px;
-        right: 10px;
+        bottom: 20px;
+        right: 15px; /* Anchors to right for mobile */
+        left: auto;
     }
-    
-    .accessibility-toolbar {
-        width: 250px;
-        padding: 15px;
-    }
-    
-    .accessibility-toggle {
-        width: 45px;
-        height: 45px;
-        font-size: 20px;
-    }
-    
-    .a11y-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 16px;
-    }
-    
-    .tts-controls { 
-        width: 90%; 
-        min-width: auto; 
-        padding: 15px; 
-    }
+    /* Keep your other mobile rules exactly as they are */
+    .accessibility-toolbar { width: 250px; padding: 15px; }
+    .accessibility-toggle { width: 45px; height: 45px; font-size: 20px; }
+    .a11y-btn { width: 40px; height: 40px; font-size: 16px; }
+    .tts-controls { width: 90%; min-width: auto; padding: 15px; }
 }

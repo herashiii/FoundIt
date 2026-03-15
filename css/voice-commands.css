@@ -219,6 +219,23 @@
     outline-offset: 3px;
 }
 
+/* Active Listening Pulse Animation */
+@keyframes mic-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(155, 44, 44, 0.8); }
+    70% { box-shadow: 0 0 0 12px rgba(155, 44, 44, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(155, 44, 44, 0); }
+}
+
+/* The JS adds the 'listening' class to #voiceBtn when active.
+  We chain it with .a11y-btn to ensure it overrides default styles. 
+*/
+.a11y-btn.listening {
+    animation: mic-pulse 1.5s infinite;
+    background-color: #C53030 !important;
+    border-color: white !important;
+    transform: scale(1.05);
+}
+
 @media (prefers-reduced-motion: reduce) {
     .voice-btn,
     .voice-feedback,

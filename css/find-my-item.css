@@ -122,30 +122,39 @@
     padding-bottom: 8px;
 }
 
+/* Sidebar Search Box Fix */
+.search-box input {
+    background: transparent !important;
+    border: none !important; /* Hides the standard input border */
+    outline: none !important; /* Removes the focus ring */
+    box-shadow: none !important; /* Ensures no global shadows act as borders */
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    width: 100% !important;
+    color: var(--split-char-1);
+    box-sizing: border-box !important;
+    height: auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* Optional: Ensure the container doesn't look like a standalone box if that's the goal */
 .search-box {
     display: flex;
     align-items: center;
     gap: 10px;
     background: var(--neut-gray-1);
-    padding: 8px 12px;
+    padding: 8px 12px !important;
     border-radius: 8px;
-    border: 1px solid var(--neut-gray-3);
+    border: 1px solid var(--neut-gray-3); /* Keep this if you want the container to have a border */
+    box-sizing: border-box !important;
+    width: 100% !important;
 }
 
 .search-signifier {
     width: 16px;
     height: 16px;
     opacity: 0.4;
-}
-
-.search-box input {
-    background: transparent;
-    border: none;
-    outline: none;
-    font-family: 'Inter', sans-serif;
-    font-size: 0.9rem;
-    width: 100%;
-    color: var(--split-char-1);
 }
 
 .filter-option {
@@ -301,28 +310,30 @@
     display: flex;
     flex-direction: column;
     gap: 6px;
-    flex: 1;
+    margin-top: auto;
 }
 
 .meta-row {
     display: flex;
-    gap: 8px;
-    font-size: 0.85rem;
-    align-items: center;
+    gap: 6px; /* Slightly reduced gap so the label sits closer to the icon */
+    font-size: 0.78rem;
+    align-items: center; /* This ensures perfectly centered vertical alignment */
     overflow: hidden; 
 }
 
 .meta-icon { 
-    filter: grayscale(1); 
-    opacity: 0.7; 
+    filter: grayscale(1); /* Keeps any rogue color completely muted */
+    opacity: 0.8; 
     flex-shrink: 0;
+    font-size: 1.1em; /* Bumps the emoji size up just a touch to match the text height */
+    line-height: 1; /* Prevents the emoji from adding weird vertical spacing */
 }
 
 .meta-label { 
-    text-transform: uppercase;
     font-weight: 700; 
     color: var(--neut-gray-5); 
     flex-shrink: 0;
+    /* Removed text-transform: uppercase; so it reads exactly as "Found at:" */
 }
 
 .meta-value { 
@@ -342,7 +353,12 @@
     border-radius: 8px;
     margin-bottom: 24px;
     font-size: 0.9rem;
-    align-items: center;
+    align-items: flex-start; /* Changed from 'center' to push items to the top */
+}
+
+.system-msg .icon {
+    flex-shrink: 0; /* Prevents the icon from being squished if the text is really long */
+    font-size: 1.1em; /* Optional: keeps the icon a nice, readable size */
 }
 
 .msg-info {
@@ -353,6 +369,45 @@
 
 .msg-info p {
     margin: 0;
+}
+
+/* Grid Controls & Sorting */
+.grid-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    gap: 16px; /* Adds a hard gap so they never touch */
+}
+
+.item-count {
+    font-size: 0.9rem;
+    color: var(--split-char-2);
+    flex-shrink: 0; /* This strictly prevents the text from being squished */
+}
+
+.sort-select {
+    /* 6px top/bottom, 32px right (for the arrow!), 12px left */
+    padding: 6px 32px 6px 12px !important; 
+    height: 38px !important; /* A comfortable, normal height */
+    width: auto !important; 
+    min-width: 135px !important; /* Just enough width so it doesn't look cramped */
+    font-size: 0.9rem !important; /* Back to a readable, normal size */
+    line-height: 1.5 !important; 
+    
+    border-radius: 6px;
+    border: 1px solid var(--neut-gray-3);
+    font-family: 'Inter', sans-serif;
+    color: var(--split-char-1);
+    background-color: var(--neut-gray-2);
+    box-sizing: border-box !important; 
+    cursor: pointer;
+    transition: border-color var(--transition);
+}
+
+.sort-select:focus {
+    outline: none;
+    border-color: var(--split-gold-1);
 }
 
 @media (max-width: 992px) {
