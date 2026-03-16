@@ -21,7 +21,7 @@
         <div class="video-placeholder">
             <div class="video-container">
                 <iframe class="video-player" 
-                        src="https://www.youtube.com/embed/EkomG1LrdtA" 
+                        src="https://www.youtube.com/embed/GNzS-XkCBGU" 
                         title="FoundiT - How It Works"
                         frameborder="0" 
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
